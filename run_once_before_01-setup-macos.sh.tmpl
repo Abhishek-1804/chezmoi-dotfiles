@@ -9,7 +9,31 @@ echo "macOS System Setup"
 echo "======================================"
 
 # ============================================
-# Part 1: Install Homebrew
+# Part 1: Install Xcode Command Line Tools
+# ============================================
+echo ""
+echo "🔧 Checking Xcode Command Line Tools..."
+
+if xcode-select -p &> /dev/null; then
+    echo "  ✓ Xcode Command Line Tools already installed"
+else
+    echo "  → Installing Xcode Command Line Tools..."
+    echo "  ⚠️  A popup will appear - click 'Install' to continue"
+    xcode-select --install
+
+    # Wait for installation to complete
+    echo "  → Waiting for installation to complete..."
+    until xcode-select -p &> /dev/null; do
+        sleep 5
+    done
+
+    echo "  ✓ Xcode Command Line Tools installed"
+fi
+
+echo "✅ Xcode Command Line Tools ready!"
+
+# ============================================
+# Part 2: Install Homebrew
 # ============================================
 echo ""
 echo "🍺 Checking Homebrew..."
@@ -33,7 +57,7 @@ fi
 echo "✅ Homebrew ready!"
 
 # ============================================
-# Part 2: Configure macOS System Defaults
+# Part 3: Configure macOS System Defaults
 # ============================================
 echo ""
 echo "📝 Configuring macOS system defaults..."
@@ -75,7 +99,7 @@ killall Finder
 echo "✅ macOS defaults configured!"
 
 # ============================================
-# Part 3: Install Oh-My-Zsh
+# Part 4: Install Oh-My-Zsh
 # ============================================
 echo ""
 echo "🚀 Installing Oh-My-Zsh..."

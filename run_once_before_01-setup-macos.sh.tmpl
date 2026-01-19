@@ -1,0 +1,128 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# One-time macOS setup: System defaults + Oh-My-Zsh
+
+set -e
+
+echo "======================================"
+echo "macOS System Setup"
+echo "======================================"
+
+# ============================================
+# Part 1: Install Homebrew
+# ============================================
+echo ""
+echo "🍺 Checking Homebrew..."
+
+if command -v brew &> /dev/null; then
+    echo "  ✓ Homebrew already installed"
+else
+    echo "  → Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add Homebrew to PATH for Apple Silicon Macs
+    if [[ $(uname -m) == 'arm64' ]]; then
+        echo "  → Adding Homebrew to PATH..."
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $HOME/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+
+    echo "  ✓ Homebrew installed"
+fi
+
+echo "✅ Homebrew ready!"
+
+# ============================================
+# Part 2: Configure macOS System Defaults
+# ============================================
+echo ""
+echo "📝 Configuring macOS system defaults..."
+
+# Disable guest account in login window
+echo "  → Disabling guest account..."
+sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false
+
+# Finder: Use column view by default
+echo "  → Setting Finder to column view..."
+defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
+
+# Enable dark mode
+echo "  → Enabling dark mode..."
+defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
+
+# Set key repeat rate (2 = fast)
+echo "  → Setting key repeat rate..."
+defaults write NSGlobalDomain KeyRepeat -int 2
+
+# Touch ID for sudo
+echo "  → Configuring Touch ID for sudo..."
+if [ ! -f /etc/pam.d/sudo_local ]; then
+    echo "auth       sufficient     pam_tid.so" | sudo tee /etc/pam.d/sudo_local > /dev/null
+    echo "  ✓ Touch ID enabled for sudo"
+else
+    if ! grep -q "pam_tid.so" /etc/pam.d/sudo_local; then
+        echo "auth       sufficient     pam_tid.so" | sudo tee /etc/pam.d/sudo_local > /dev/null
+        echo "  ✓ Touch ID enabled for sudo"
+    else
+        echo "  ✓ Touch ID already configured for sudo"
+    fi
+fi
+
+# Restart Finder to apply changes
+echo "  → Restarting Finder..."
+killall Finder
+
+echo "✅ macOS defaults configured!"
+
+# ============================================
+# Part 3: Install Oh-My-Zsh
+# ============================================
+echo ""
+echo "🚀 Installing Oh-My-Zsh..."
+
+# Check if Oh-My-Zsh is already installed
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    echo "  ✓ Oh-My-Zsh already installed"
+else
+    echo "  → Installing Oh-My-Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    echo "  ✓ Oh-My-Zsh installed"
+fi
+
+# Install zsh-syntax-highlighting
+ZSH_SYNTAX_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
+if [ -d "$ZSH_SYNTAX_DIR" ]; then
+    echo "  ✓ zsh-syntax-highlighting already installed"
+else
+    echo "  → Installing zsh-syntax-highlighting..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_SYNTAX_DIR"
+    echo "  ✓ zsh-syntax-highlighting installed"
+fi
+
+# Install zsh-autosuggestions
+ZSH_AUTOSUGGESTIONS_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+if [ -d "$ZSH_AUTOSUGGESTIONS_DIR" ]; then
+    echo "  ✓ zsh-autosuggestions already installed"
+else
+    echo "  → Installing zsh-autosuggestions..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_AUTOSUGGESTIONS_DIR"
+    echo "  ✓ zsh-autosuggestions installed"
+fi
+
+echo "✅ Oh-My-Zsh setup complete!"
+
+# ============================================
+# Summary
+# ============================================
+echo ""
+echo "======================================"
+echo "✨ macOS Setup Complete!"
+echo "======================================"
+echo ""
+echo "⚠️  MANUAL STEPS REQUIRED:"
+echo "  1. Remap Caps Lock to Control:"
+echo "     System Settings > Keyboard > Keyboard Shortcuts > Modifier Keys"
+echo "     Select your keyboard, then set Caps Lock to Control"
+echo ""
+echo "📝 Note: Key repeat settings may require logout/login to take full effect"
+{{ end -}}

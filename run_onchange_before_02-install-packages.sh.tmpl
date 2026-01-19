@@ -11,11 +11,14 @@ BREWFILE=$(cat <<'EOF'
 # ============================================
 # Taps
 # ============================================
-tap "homebrew/cask-fonts"
 tap "nikitabobko/tap"
 
 # ============================================
-# CLI Tools - Development
+# CLI
+# ============================================
+
+# ============================================
+# Development
 # ============================================
 brew "git"
 brew "gh"
@@ -23,19 +26,14 @@ brew "nodejs"
 brew "python@3"
 brew "uv"
 brew "rustup"
-brew "cargo"
 brew "go"
 brew "gcc"
 brew "cmake"
-brew "jdk"
-brew "bun"
 brew "pnpm"
-brew "yarn"
-brew "deno"
 brew "gradle"
 
 # ============================================
-# CLI Tools - System Utilities
+# System Utilities
 # ============================================
 brew "neovim"
 brew "atuin"
@@ -45,7 +43,6 @@ brew "ripgrep"
 brew "fzf"
 brew "lazygit"
 brew "lazydocker"
-brew "zellij"
 brew "starship"
 brew "zellij"
 brew "yazi"
@@ -61,8 +58,9 @@ brew "hwloc"
 brew "scc"
 
 # ============================================
-# CLI Tools - Cloud & DevOps
+# Cloud & DevOps
 # ============================================
+brew "opencode"
 brew "awscli"
 brew "kubectl"
 brew "k9s"
@@ -71,7 +69,7 @@ brew "podman"
 brew "podman-compose"
 
 # ============================================
-# CLI Tools - Networking & Security
+# Networking & Security
 # ============================================
 brew "nginx"
 brew "mtr"
@@ -79,28 +77,22 @@ brew "nmap"
 brew "aria2"
 brew "rsync"
 brew "rclone"
-brew "ngrok"
-brew "speedtest-rs"
-brew "hping"
+brew "speedtest-cli"
+brew "httping"
 brew "gping"
 brew "hashcat"
 
 # ============================================
-# CLI Tools - Media & Content
+# Utilities
 # ============================================
 brew "ffmpeg"
 brew "hugo"
 brew "yt-dlp"
 brew "croc"
-
-# ============================================
-# CLI Tools - Utilities
-# ============================================
 brew "fdupes"
-brew "czkawka"
 
 # ============================================
-# CLI Tools - Fun
+# Fun
 # ============================================
 brew "sl"
 brew "cmatrix"
@@ -111,7 +103,7 @@ brew "asciinema"
 brew "lolcat"
 
 # ============================================
-# CLI Tools - Misc/Specific
+# Misc/Specific
 # ============================================
 brew "luarocks"
 brew "xleak"
@@ -120,72 +112,41 @@ brew "container-compose"
 brew "lazycontainer"
 
 # ============================================
-# GUI Applications - Browsers
+# Casks
 # ============================================
 cask "arc"
 cask "google-chrome"
 cask "vivaldi"
-
-# ============================================
-# GUI Applications - Development
-# ============================================
 cask "cursor"
 cask "windsurf"
 cask "ghostty"
 cask "postman"
 cask "orbstack"
 cask "utm"
-
-# ============================================
-# GUI Applications - Productivity
-# ============================================
 cask "raycast"
 cask "notion"
 cask "nikitabobko/tap/aerospace"
 cask "stats"
-
-# ============================================
-# GUI Applications - Communication
-# ============================================
 cask "discord"
 cask "whatsapp"
 cask "zoom"
-cask "microsoft-teams"
-
-# ============================================
-# GUI Applications - AI/ML
-# ============================================
 cask "claude"
+cask "claude-code"
 cask "chatgpt"
 cask "lm-studio"
-
-# ============================================
-# GUI Applications - Microsoft Office
-# ============================================
 cask "microsoft-word"
 cask "microsoft-excel"
 cask "microsoft-powerpoint"
-
-# ============================================
-# GUI Applications - Media & Entertainment
-# ============================================
+cask "microsoft-teams"
 cask "vlc"
 cask "plex-media-server"
 cask "steam"
 cask "boosteroid"
-
-# ============================================
-# GUI Applications - Utilities
-# ============================================
 cask "google-drive"
 cask "container"
 cask "dockey"
 cask "logi-options+"
 cask "surfshark"
-
-# ============================================
-# Fonts
-# ============================================
 cask "font-jetbrains-mono-nerd-font"
 
 # ============================================

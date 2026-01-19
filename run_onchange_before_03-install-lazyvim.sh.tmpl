@@ -1,0 +1,17 @@
+#!/bin/bash
+# Install LazyVim starter if init.lua doesn't exist
+
+set -e
+
+if [ ! -f "$HOME/.config/nvim/init.lua" ]; then
+    echo "Installing LazyVim starter..."
+    # Remove any partial nvim config
+    rm -rf "$HOME/.config/nvim"
+    # Clone LazyVim starter
+    git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
+    rm -rf "$HOME/.config/nvim/.git"
+    echo "LazyVim starter installed!"
+    echo "Chezmoi will apply your custom config on top"
+else
+    echo "LazyVim already installed (init.lua exists)"
+fi

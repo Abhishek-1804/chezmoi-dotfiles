@@ -198,12 +198,12 @@ EOF
 )
 
 # Install/update packages
-echo "$BREWFILE" | brew bundle --no-lock --file=/dev/stdin
+echo "$BREWFILE" | brew bundle --file=/dev/stdin
 
 # Remove packages not in Brewfile
 echo ""
 echo "Cleaning up packages not in Brewfile..."
-echo "$BREWFILE" | brew bundle cleanup --force --file=/dev/stdin
+echo "$BREWFILE" | brew bundle cleanup --force --file=/dev/stdin --no-upgrade
 
 echo ""
 echo "✓ Brew bundle complete!"

@@ -1,0 +1,15 @@
+// Zellij Configuration
+
+// Configure leader keys
+modifier "Ctrl"
+secondary_modifier "Shift Ctrl"
+
+keybinds {
+    shared {
+        // Navigation using Alt + hjkl
+        bind "Alt h" { MoveFocusOrTab "Left"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt k" { MoveFocus "Up"; }
+        bind "Alt l" { MoveFocusOrTab "Right"; }
+    }
+}

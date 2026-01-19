@@ -1,0 +1,211 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Homebrew package management with auto-cleanup
+# Packages not listed here will be REMOVED on next run
+
+set -e
+
+echo "Installing/updating Homebrew packages..."
+
+BREWFILE=$(cat <<'EOF'
+# ============================================
+# Taps
+# ============================================
+tap "homebrew/cask-fonts"
+tap "nikitabobko/tap"
+
+# ============================================
+# CLI Tools - Development
+# ============================================
+brew "git"
+brew "gh"
+brew "nodejs"
+brew "python@3"
+brew "uv"
+brew "rustup"
+brew "cargo"
+brew "go"
+brew "gcc"
+brew "cmake"
+brew "jdk"
+brew "bun"
+brew "pnpm"
+brew "yarn"
+brew "deno"
+brew "gradle"
+
+# ============================================
+# CLI Tools - System Utilities
+# ============================================
+brew "neovim"
+brew "bat"
+brew "fd"
+brew "ripgrep"
+brew "fzf"
+brew "lazygit"
+brew "lazydocker"
+brew "zellij"
+brew "starship"
+brew "zellij"
+brew "yazi"
+brew "eza"
+brew "duf"
+brew "btop"
+brew "fastfetch"
+brew "stow"
+brew "chezmoi"
+brew "tlrc"
+brew "watch"
+brew "hwloc"
+brew "scc"
+
+# ============================================
+# CLI Tools - Cloud & DevOps
+# ============================================
+brew "awscli"
+brew "kubectl"
+brew "k9s"
+brew "minikube"
+brew "podman"
+brew "podman-compose"
+
+# ============================================
+# CLI Tools - Networking & Security
+# ============================================
+brew "nginx"
+brew "mtr"
+brew "nmap"
+brew "aria2"
+brew "rsync"
+brew "rclone"
+brew "ngrok"
+brew "speedtest-rs"
+brew "hping"
+brew "gping"
+brew "hashcat"
+
+# ============================================
+# CLI Tools - Media & Content
+# ============================================
+brew "ffmpeg"
+brew "hugo"
+brew "yt-dlp"
+brew "croc"
+
+# ============================================
+# CLI Tools - Utilities
+# ============================================
+brew "fdupes"
+brew "czkawka"
+
+# ============================================
+# CLI Tools - Fun
+# ============================================
+brew "sl"
+brew "cmatrix"
+brew "cbonsai"
+brew "asciiquarium"
+brew "genact"
+brew "asciinema"
+brew "lolcat"
+
+# ============================================
+# CLI Tools - Misc/Specific
+# ============================================
+brew "luarocks"
+brew "xleak"
+brew "transmission-cli"
+brew "container-compose"
+brew "lazycontainer"
+
+# ============================================
+# GUI Applications - Browsers
+# ============================================
+cask "arc"
+cask "google-chrome"
+cask "vivaldi"
+
+# ============================================
+# GUI Applications - Development
+# ============================================
+cask "cursor"
+cask "windsurf"
+cask "ghostty"
+cask "postman"
+cask "orbstack"
+cask "utm"
+
+# ============================================
+# GUI Applications - Productivity
+# ============================================
+cask "raycast"
+cask "notion"
+cask "nikitabobko/tap/aerospace"
+cask "stats"
+
+# ============================================
+# GUI Applications - Communication
+# ============================================
+cask "discord"
+cask "whatsapp"
+cask "zoom"
+cask "microsoft-teams"
+
+# ============================================
+# GUI Applications - AI/ML
+# ============================================
+cask "claude"
+cask "chatgpt"
+cask "lm-studio"
+
+# ============================================
+# GUI Applications - Microsoft Office
+# ============================================
+cask "microsoft-word"
+cask "microsoft-excel"
+cask "microsoft-powerpoint"
+
+# ============================================
+# GUI Applications - Media & Entertainment
+# ============================================
+cask "vlc"
+cask "plex-media-server"
+cask "steam"
+cask "boosteroid"
+
+# ============================================
+# GUI Applications - Utilities
+# ============================================
+cask "google-drive"
+cask "container"
+cask "dockey"
+cask "logi-options+"
+cask "surfshark"
+
+# ============================================
+# Fonts
+# ============================================
+cask "font-jetbrains-mono-nerd-font"
+
+# ============================================
+# Mac App Store
+# ============================================
+mas "Amphetamine", id: 937984704
+mas "iMovie", id: 408981434
+mas "Tap Bot", id: 6444782835
+mas "DaVinci Resolve", id: 571213070
+EOF
+)
+
+# Install/update packages
+echo "$BREWFILE" | brew bundle --no-lock --file=/dev/stdin
+
+# Remove packages not in Brewfile
+echo ""
+echo "Cleaning up packages not in Brewfile..."
+echo "$BREWFILE" | brew bundle cleanup --force --file=/dev/stdin
+
+echo ""
+echo "✓ Brew bundle complete!"
+echo "⚠️  WARNING: Any manually installed packages not in this list were removed"
+{{ end -}}

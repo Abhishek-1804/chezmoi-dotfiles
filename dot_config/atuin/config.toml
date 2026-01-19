@@ -1,0 +1,14 @@
+## Atuin Configuration
+
+# Theme style
+style = "auto"
+
+# Disable automatic sync
+auto_sync = false
+
+# Enable enter to accept suggestions
+enter_accept = true
+
+# Theme configuration
+[theme]
+name = "autumn"

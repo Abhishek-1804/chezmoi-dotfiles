@@ -1,0 +1,133 @@
+packages:
+  darwin:
+    taps:
+      - nikitabobko/tap
+    brews:
+    # Development
+      - git
+      - gh
+      - nodejs
+      - python@3
+      - uv
+      - rustup
+      - go
+      - gcc
+      - cmake
+      - pnpm
+      - gradle
+
+    # System Utilities
+      - neovim
+      - atuin
+      - bat
+      - fd
+      - jq
+      - ripgrep
+      - fzf
+      - lazygit
+      - lazydocker
+      - starship
+      - zellij
+      - yazi
+      - eza
+      - duf
+      - btop
+      - fastfetch
+      - stow
+      - chezmoi
+      - tlrc
+      - watch
+      - hwloc
+      - scc
+
+    # Cloud & DevOps
+      - opencode
+      - awscli
+      - kubectl
+      - k9s
+      - minikube
+      - podman
+      - podman-compose
+
+    #  Networking & Security
+      - nginx
+      - mtr
+      - nmap
+      - aria2
+      - rsync
+      - rclone
+      - speedtest-cli
+      - httping
+      - gping
+      - hashcat
+
+    #  Utilities
+      - ffmpeg
+      - hugo
+      - yt-dlp
+      - croc
+      - fdupes
+
+    #  Fun
+      - sl
+      - cmatrix
+      - cbonsai
+      - asciiquarium
+      - genact
+      - asciinema
+      - lolcat
+
+    #  Misc/Specific
+      - luarocks
+      - xleak
+      - transmission-cli
+      - container-compose
+      - lazycontainer
+
+    casks:
+      - arc
+      - google-chrome
+      - vivaldi
+      - hyperkey
+      - cursor
+      - windsurf
+      - ghostty
+      - postman
+      - orbstack
+      - utm
+      - raycast
+      - notion
+      - nikitabobko/tap/aerospace
+      - discord
+      - whatsapp
+      - zoom
+      - claude
+      - claude-code
+      - chatgpt
+      - lm-studio
+      - microsoft-word
+      - microsoft-excel
+      - microsoft-powerpoint
+      - microsoft-teams
+      - vlc
+      - plex-media-server
+      - steam
+      - boosteroid
+      - google-drive
+      - container
+      - dockey
+      - logi-options+
+      - surfshark
+      - font-jetbrains-mono-nerd-font
+    
+    mas:
+      - name: Amphetamine
+        id: 937984704
+      - name: iMovie
+        id: 408981434
+      - name: Tap Bot
+        id: 6444782835
+      - name: DaVinci Resolve
+        id: 571213070
+
+

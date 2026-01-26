@@ -40,8 +40,11 @@ packages:
       - hwloc
       - scc
 
-    # Cloud & DevOps
+    # AI
       - opencode
+      - ollama
+
+    # Cloud & DevOps
       - awscli
       - kubectl
       - k9s

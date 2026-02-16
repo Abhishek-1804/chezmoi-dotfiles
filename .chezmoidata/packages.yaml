@@ -91,6 +91,8 @@ packages:
       - arc
       - google-chrome
       - vivaldi
+      - codex
+      - codex-app
       - hyperkey
       - cursor
       - windsurf

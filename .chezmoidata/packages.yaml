@@ -114,6 +114,7 @@ packages:
       - microsoft-excel
       - microsoft-powerpoint
       - microsoft-teams
+      - scroll-reverser
       - vlc
       - plex-media-server
       - steam

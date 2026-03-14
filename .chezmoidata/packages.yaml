@@ -12,6 +12,7 @@ packages:
       - rustup
       - go
       - gcc
+      - cargo
       - cmake
       - pnpm
       - gradle

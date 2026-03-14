@@ -7,12 +7,11 @@ packages:
       - git
       - gh
       - nodejs
-      - python@3
       - uv
       - rustup
       - go
       - gcc
-      - cargo
+      - rust
       - cmake
       - pnpm
       - gradle
@@ -23,6 +22,7 @@ packages:
       - bat
       - fd
       - jq
+      - yq
       - ripgrep
       - fzf
       - lazygit

@@ -15,6 +15,7 @@ packages:
       - cmake
       - pnpm
       - gradle
+      - protobuf
 
     # System Utilities
       - neovim

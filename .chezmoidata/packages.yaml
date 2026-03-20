@@ -11,7 +11,6 @@ packages:
       - rustup
       - go
       - gcc
-      - rust
       - cmake
       - pnpm
       - gradle
@@ -26,6 +25,7 @@ packages:
       - yq
       - ripgrep
       - fzf
+      - television
       - lazygit
       - lazydocker
       - starship
@@ -35,7 +35,6 @@ packages:
       - duf
       - btop
       - fastfetch
-      - stow
       - chezmoi
       - tlrc
       - watch
@@ -49,6 +48,7 @@ packages:
     # Cloud & DevOps
       - awscli
       - kubectl
+      - kind
       - k9s
       - minikube
       - podman
@@ -84,8 +84,6 @@ packages:
 
     #  Misc/Specific
       - luarocks
-      - xleak
-      - rtorrent
       - container-compose
       - lazycontainer
 
@@ -104,7 +102,7 @@ packages:
       - utm
       - raycast
       - notion
-      - nikitabobko/tap/aerospace
+      - aerospace
       - discord
       - whatsapp
       - zoom

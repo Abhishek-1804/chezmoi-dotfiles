@@ -110,6 +110,7 @@ source $ZSH/oh-my-zsh.sh
 alias lg="lazygit"
 alias aw="aerospace list-windows --all --format '%{window-id} | %{app-name} | %{window-title}' | fzf --bind 'enter:become(aerospace focus --window-id {1})'"
 alias gbs="git branch | fzf | xargs git switch"
+alias brewup="brew update && brew upgrade --greedy && brew autoremove && brew cleanup --prune=all && brew doctor"
 
 eval "$(starship init zsh)"
 eval "$(atuin init zsh)"

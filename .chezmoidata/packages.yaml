@@ -12,6 +12,7 @@ packages:
       - go
       - gcc
       - cmake
+      - make
       - pnpm
       - gradle
       - protobuf
@@ -49,6 +50,7 @@ packages:
       - awscli
       - kubectl
       - kind
+      - helm
       - k9s
       - minikube
       - podman

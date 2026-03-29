@@ -3,7 +3,7 @@ packages:
     taps:
       - nikitabobko/tap
     brews:
-    # Development
+      # Development
       - git
       - gh
       - nodejs
@@ -17,7 +17,7 @@ packages:
       - gradle
       - protobuf
 
-    # System Utilities
+      # System Utilities
       - neovim
       - atuin
       - bat
@@ -42,21 +42,22 @@ packages:
       - hwloc
       - scc
 
-    # AI
+      # AI
       - opencode
       - ollama
 
-    # Cloud & DevOps
+      # Cloud & DevOps
       - awscli
       - kubectl
       - kind
       - helm
+      - helmfile
       - k9s
       - minikube
       - podman
       - podman-compose
 
-    #  Networking & Security
+      #  Networking & Security
       - nginx
       - mtr
       - nmap
@@ -68,14 +69,14 @@ packages:
       - gping
       - hashcat
 
-    #  Utilities
+      #  Utilities
       - ffmpeg
       - hugo
       - yt-dlp
       - croc
       - fdupes
 
-    #  Fun
+      #  Fun
       - sl
       - cmatrix
       - cbonsai
@@ -84,7 +85,7 @@ packages:
       - asciinema
       - lolcat
 
-    #  Misc/Specific
+      #  Misc/Specific
       - luarocks
       - container-compose
       - lazycontainer
@@ -127,7 +128,7 @@ packages:
       - logi-options+
       - surfshark
       - font-jetbrains-mono-nerd-font
-    
+
     mas:
       - name: Amphetamine
         id: 937984704
@@ -137,5 +138,3 @@ packages:
         id: 6444782835
       - name: DaVinci Resolve
         id: 571213070
-
-

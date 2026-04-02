@@ -13,6 +13,7 @@ packages:
       - gcc
       - cmake
       - make
+      - just
       - pnpm
       - gradle
       - protobuf
@@ -93,7 +94,6 @@ packages:
     casks:
       - arc
       - google-chrome
-      - vivaldi
       - codex
       - codex-app
       - hyperkey
@@ -110,16 +110,14 @@ packages:
       - whatsapp
       - zoom
       - claude
-      - claude-code
+      - claude-code@latest
       - chatgpt
       - lm-studio
       - microsoft-word
       - microsoft-excel
       - microsoft-powerpoint
-      - microsoft-teams
       - scroll-reverser
       - vlc
-      - plex-media-server
       - steam
       - boosteroid
       - google-drive

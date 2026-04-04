@@ -97,8 +97,6 @@ packages:
       - codex
       - codex-app
       - hyperkey
-      - cursor
-      - windsurf
       - ghostty
       - postman
       - orbstack

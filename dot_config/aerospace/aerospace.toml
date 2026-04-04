@@ -238,3 +238,7 @@ run = 'move-node-to-workspace W'
 [[on-window-detected]]
 if.app-id = 'net.whatsapp.WhatsApp'
 run = 'move-node-to-workspace E'
+
+[[on-window-detected]]
+if.app-id = 'dev.zed.Zed'
+run = 'move-node-to-workspace Q'

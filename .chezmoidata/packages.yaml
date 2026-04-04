@@ -115,6 +115,7 @@ packages:
       - lm-studio
       - microsoft-word
       - microsoft-excel
+      - zed
       - microsoft-powerpoint
       - scroll-reverser
       - vlc

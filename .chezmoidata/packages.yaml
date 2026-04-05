@@ -69,6 +69,7 @@ packages:
       - httping
       - gping
       - hashcat
+      - tailscale
 
       #  Utilities
       - ffmpeg

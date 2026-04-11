@@ -1,0 +1,8 @@
+{
+  "hotkey": { "keyCode": 63, "modifiers": [] },
+  "modelSize": "small.en",
+  "language": "en",
+  "spokenPunctuation": false,
+  "maxRecordings": 0,
+  "toggleMode": false
+}

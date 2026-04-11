@@ -46,6 +46,7 @@ packages:
       # AI
       - opencode
       - ollama
+      - human37/open-wispr/open-wispr
 
       # Cloud & DevOps
       - awscli

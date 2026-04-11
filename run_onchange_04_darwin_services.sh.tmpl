@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+set -e
+
+echo "🔧 Starting background services..."
+
+brew services start human37/open-wispr/open-wispr
+
+echo "✅ Services started!"
+{{ end -}}

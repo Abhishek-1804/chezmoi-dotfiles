@@ -240,5 +240,5 @@ if.app-id = 'net.whatsapp.WhatsApp'
 run = 'move-node-to-workspace E'
 
 [[on-window-detected]]
-if.app-id = 'dev.zed.Zed'
+if.app-id = 'com.anthropic.claudefordesktop'
 run = 'move-node-to-workspace Q'

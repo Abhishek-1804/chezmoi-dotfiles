@@ -27,13 +27,11 @@ packages:
       - yq
       - ripgrep
       - fzf
-      - television
       - lazygit
       - lazydocker
       - starship
       - zellij
       - yazi
-      - eza
       - duf
       - btop
       - fastfetch
@@ -96,8 +94,6 @@ packages:
     casks:
       - arc
       - google-chrome
-      - codex
-      - codex-app
       - hyperkey
       - blip
       - ghostty
@@ -112,9 +108,7 @@ packages:
       - zoom
       - claude
       - claude-code@latest
-      - chatgpt
       - obsidian
-      - lm-studio
       - microsoft-word
       - microsoft-excel
       - zed

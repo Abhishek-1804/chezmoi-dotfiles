@@ -93,7 +93,7 @@ packages:
 
     casks:
       - arc
-      - google-chrome
+      # - google-chrome
       - hyperkey
       - blip
       - ghostty
@@ -108,7 +108,7 @@ packages:
       - zoom
       - claude
       - claude-code@latest
-      - obsidian
+      # - obsidian
       - microsoft-word
       - microsoft-excel
       - zed
@@ -132,5 +132,5 @@ packages:
         id: 408981434
       - name: Tap Bot
         id: 6444782835
-      - name: DaVinci Resolve
-        id: 571213070
+      # - name: DaVinci Resolve
+      #   id: 571213070

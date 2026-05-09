@@ -108,9 +108,11 @@ packages:
       - zoom
       - claude
       - claude-code@latest
-      # - obsidian
+      - obsidian
+      - codex-app
       - microsoft-word
       - microsoft-excel
+      - microsoft-teams
       - zed
       - microsoft-powerpoint
       - scroll-reverser

@@ -95,6 +95,7 @@ packages:
       - arc
       # - google-chrome
       - hyperkey
+      - cmux
       - blip
       - ghostty
       - postman

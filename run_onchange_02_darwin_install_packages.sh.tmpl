@@ -1,11 +1,6 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
-set -e
-
-echo "📦 Installing and upgrading packages declaratively with brew bundle..."
-echo "⚠️  Packages not in the list will be uninstalled (--cleanup)"
-
 brew bundle --cleanup --upgrade --file=/dev/stdin <<EOF
 {{ range .packages.darwin.taps -}}
 tap {{ . | quote }}

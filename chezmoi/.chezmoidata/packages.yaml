@@ -36,6 +36,8 @@ packages:
       - btop
       - fastfetch
       - chezmoi
+      - zoxide
+      - eza
       - tlrc
       - watch
       - hwloc
@@ -47,6 +49,7 @@ packages:
       - human37/open-wispr/open-wispr
 
       # Cloud & DevOps
+      - ansible
       - awscli
       - kubectl
       - kind
@@ -90,6 +93,9 @@ packages:
       - luarocks
       - container-compose
       - lazycontainer
+
+      # mac-apps
+      - mas
 
     casks:
       - arc
@@ -136,5 +142,9 @@ packages:
         id: 408981434
       - name: Tap Bot
         id: 6444782835
-      # - name: DaVinci Resolve
-      #   id: 571213070
+      - name: DaVinci Resolve
+        id: 571213070
+      - name: Xcode
+        id: 497799835
+      - name: Apple Developer
+        id: 640199958

@@ -4,7 +4,11 @@
   roles:
     - role: bootstrap
       tags: [bootstrap]
+    - role: homebrew
+      tags: [packages, brew]
     - role: chezmoi
       tags: [dotfiles, chezmoi]
     - role: macos_defaults
       tags: [defaults]
+    - role: brew_maintenance
+      tags: [never, maintenance]

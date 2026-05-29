@@ -1,0 +1,30 @@
+- name: Add Homebrew taps
+  community.general.homebrew_tap:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ brew_taps }}"
+
+- name: Install brew formulae
+  community.general.homebrew:
+    name: "{{ brew_packages }}"
+    state: present
+
+- name: Install casks
+  community.general.homebrew_cask:
+    name: "{{ cask_packages }}"
+    state: present
+    accept_external_apps: true
+
+- name: Install Mac App Store apps
+  community.general.mas:
+    id: "{{ item.id }}"
+    state: present
+  loop: "{{ mas_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Start brew services
+  ansible.builtin.command: "brew services start {{ item }}"
+  register: svc
+  changed_when: "'Successfully started' in svc.stdout"
+  loop: "{{ brew_services }}"

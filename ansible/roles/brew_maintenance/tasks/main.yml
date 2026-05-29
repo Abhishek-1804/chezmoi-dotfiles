@@ -1,0 +1,13 @@
+- name: Upgrade all packages (greedy)
+  community.general.homebrew:
+    upgrade_all: true
+
+- name: Autoremove unused dependencies
+  ansible.builtin.command: brew autoremove
+  register: autoremove
+  changed_when: "'Removing' in autoremove.stdout"
+
+- name: Cleanup old versions and cache
+  ansible.builtin.command: brew cleanup --prune=all
+  register: cleanup
+  changed_when: cleanup.stdout | length > 0

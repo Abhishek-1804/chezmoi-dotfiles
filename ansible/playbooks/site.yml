@@ -6,6 +6,8 @@
       tags: [bootstrap]
     - role: homebrew
       tags: [packages, brew]
+    - role: neovim
+      tags: [neovim, nvim]
     - role: chezmoi
       tags: [dotfiles, chezmoi]
     - role: macos_defaults

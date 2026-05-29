@@ -1,0 +1,38 @@
+- name: Check Xcode Command Line Tools
+  ansible.builtin.command: xcode-select -p
+  register: xcode_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Xcode Command Line Tools
+  ansible.builtin.command: xcode-select --install
+  when: xcode_check.rc != 0
+
+- name: Check Homebrew
+  ansible.builtin.command: command -v brew
+  register: brew_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Homebrew
+  ansible.builtin.shell: |
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    creates: /opt/homebrew/bin/brew
+  environment:
+    NONINTERACTIVE: "1"
+  when: brew_check.rc != 0
+
+- name: Add Homebrew to .zprofile (Apple Silicon)
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts['user_dir'] }}/.zprofile"
+    create: true
+    line: 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+    mode: "0644"
+  when: ansible_facts['architecture'] == "arm64"
+
+- name: Install Oh-My-Zsh
+  ansible.builtin.shell: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  args:
+    creates: "{{ ansible_facts['user_dir'] }}/.oh-my-zsh"

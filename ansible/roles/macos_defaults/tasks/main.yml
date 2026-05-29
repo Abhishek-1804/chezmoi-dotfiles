@@ -1,0 +1,35 @@
+- name: Disable guest account
+  ansible.builtin.command: defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool false
+  become: true
+  changed_when: false
+
+- name: Finder column view by default
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: FXPreferredViewStyle
+    type: string
+    value: clmv
+  notify: restart finder
+
+- name: Enable dark mode
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleInterfaceStyle
+    type: string
+    value: Dark
+
+- name: Fast key repeat
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: KeyRepeat
+    type: int
+    value: 1
+
+- name: Touch ID for sudo
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/sudo_local
+    create: true
+    line: "auth       sufficient     pam_tid.so"
+    state: present
+    mode: "0444"
+  become: true

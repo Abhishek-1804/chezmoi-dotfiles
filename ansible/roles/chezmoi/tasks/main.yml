@@ -1,0 +1,21 @@
+- name: Install chezmoi
+  community.general.homebrew:
+    name: chezmoi
+    state: present
+
+- name: Ensure chezmoi config dir exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.config/chezmoi"
+    state: directory
+    mode: "0700"
+
+- name: Render chezmoi config
+  ansible.builtin.template:
+    src: chezmoi.toml.j2
+    dest: "{{ ansible_facts['user_dir'] }}/.config/chezmoi/chezmoi.toml"
+    mode: "0600"
+
+- name: Apply dotfiles
+  ansible.builtin.command: chezmoi apply
+  register: chezmoi_apply
+  changed_when: chezmoi_apply.stdout | length > 0

@@ -1,0 +1,3 @@
+- name: restart finder
+  ansible.builtin.command: killall Finder
+  changed_when: false

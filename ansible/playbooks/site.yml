@@ -1,0 +1,10 @@
+- name: Provision mac
+  hosts: mac
+  gather_facts: true
+  roles:
+    - role: bootstrap
+      tags: [bootstrap]
+    - role: chezmoi
+      tags: [dotfiles, chezmoi]
+    - role: macos_defaults
+      tags: [defaults]

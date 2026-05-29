@@ -1,0 +1,3 @@
+- name: Bootstrap macOS
+  ansible.builtin.import_tasks: darwin.yml
+  when: ansible_facts['os_family'] == "Darwin"

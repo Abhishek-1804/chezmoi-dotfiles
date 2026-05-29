@@ -1,0 +1,30 @@
+- name: Install base build/runtime prerequisites
+  become: true
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - curl
+      - wget
+      - git
+      - zsh
+      - unzip
+    state: present
+    update_cache: true
+
+- name: Check for Oh-My-Zsh
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['user_dir'] }}/.oh-my-zsh"
+  register: omz
+
+- name: Install Oh-My-Zsh
+  ansible.builtin.shell: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  args:
+    creates: "{{ ansible_facts['user_dir'] }}/.oh-my-zsh"
+  when: not omz.stat.exists
+
+- name: Set zsh as default shell
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /usr/bin/zsh

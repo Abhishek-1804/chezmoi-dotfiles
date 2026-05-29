@@ -1,0 +1,48 @@
+# apt-installable equivalents of the mac brew list.
+# Binary names sometimes differ (bat -> batcat, fd -> fdfind).
+apt_packages:
+  # Development
+  - git
+  - gh
+  - nodejs
+  - npm
+  - golang-go
+  - gcc
+  - cmake
+  - make
+  - gradle
+  - protobuf-compiler
+
+  # System Utilities
+  - chezmoi
+  - neovim
+  - bat
+  - fd-find
+  - jq
+  - ripgrep
+  - fzf
+  - duf
+  - btop
+  - zoxide
+  - hwloc
+  - procps        # provides `watch`
+
+  # Networking & Security
+  - nginx
+  - mtr
+  - nmap
+  - aria2
+  - rsync
+  - rclone
+  - speedtest-cli
+  - hashcat
+
+  # Utilities
+  - ffmpeg
+  - hugo
+  - fdupes
+
+  # Fun
+  - sl
+  - cmatrix
+  - lolcat

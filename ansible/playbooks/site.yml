@@ -14,3 +14,16 @@
       tags: [defaults]
     - role: brew_maintenance
       tags: [never, maintenance]
+
+- name: Provision ubuntu
+  hosts: ubuntu
+  gather_facts: true
+  roles:
+    - role: bootstrap
+      tags: [bootstrap]
+    - role: apt
+      tags: [packages, apt]
+    - role: neovim
+      tags: [neovim, nvim]
+    - role: chezmoi
+      tags: [dotfiles, chezmoi]

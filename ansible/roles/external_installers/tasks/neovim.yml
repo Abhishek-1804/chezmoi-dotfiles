@@ -1,0 +1,37 @@
+- name: Remove apt neovim if present (too old for LazyVim)
+  become: true
+  ansible.builtin.apt:
+    name:
+      - neovim
+      - neovim-runtime
+    state: absent
+    purge: true
+
+- name: Check installed neovim version
+  ansible.builtin.command: /usr/local/bin/nvim --version
+  register: nvim_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download neovim release tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/neovim/neovim/releases/download/v{{ neovim_version }}/nvim-linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}.tar.gz"
+    dest: "/tmp/nvim-{{ neovim_version }}.tar.gz"
+    mode: "0644"
+  when: neovim_version not in (nvim_installed.stdout | default(''))
+
+- name: Extract neovim into /opt
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/nvim-{{ neovim_version }}.tar.gz"
+    dest: /opt
+    remote_src: true
+    creates: "/opt/nvim-linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}/bin/nvim"
+
+- name: Symlink nvim into /usr/local/bin
+  become: true
+  ansible.builtin.file:
+    src: "/opt/nvim-linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}/bin/nvim"
+    dest: /usr/local/bin/nvim
+    state: link
+    force: true

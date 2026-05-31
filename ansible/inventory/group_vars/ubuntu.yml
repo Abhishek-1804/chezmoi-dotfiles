@@ -16,7 +16,7 @@ apt_packages:
   # System Utilities
   # NOTE: chezmoi installed via official script in bootstrap role
   # (apt version is too stale for template features).
-  - neovim
+  # neovim installed via external_installers (apt version too old for LazyVim).
   - bat
   - fd-find
   - jq
@@ -27,6 +27,7 @@ apt_packages:
   - zoxide
   - hwloc
   - procps        # provides `watch`
+  - fastfetch
 
   # Networking & Security
   - nginx

@@ -1,0 +1,21 @@
+- name: Download atuin install script
+  ansible.builtin.get_url:
+    url: https://setup.atuin.sh
+    dest: /tmp/atuin-install.sh
+    mode: "0755"
+    force: false
+
+- name: Run atuin install script
+  ansible.builtin.command: /tmp/atuin-install.sh
+  args:
+    creates: "{{ ansible_facts['user_dir'] }}/.atuin/bin/atuin"
+  environment:
+    ATUIN_NO_MODIFY_PATH: "1"
+
+- name: Symlink atuin into /usr/local/bin
+  become: true
+  ansible.builtin.file:
+    src: "{{ ansible_facts['user_dir'] }}/.atuin/bin/atuin"
+    dest: /usr/local/bin/atuin
+    state: link
+    force: true

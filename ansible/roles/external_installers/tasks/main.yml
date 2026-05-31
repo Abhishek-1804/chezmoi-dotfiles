@@ -1,0 +1,17 @@
+- name: Install neovim
+  ansible.builtin.import_tasks: neovim.yml
+
+- name: Install starship
+  ansible.builtin.import_tasks: starship.yml
+
+- name: Install atuin
+  ansible.builtin.import_tasks: atuin.yml
+
+- name: Install lazygit
+  ansible.builtin.import_tasks: lazygit.yml
+
+- name: Install Nerd Font
+  ansible.builtin.import_tasks: nerd_font.yml
+
+- name: Symlink bat/fd to apt names
+  ansible.builtin.import_tasks: aliases.yml

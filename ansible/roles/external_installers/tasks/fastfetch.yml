@@ -1,0 +1,18 @@
+- name: Check installed fastfetch version
+  ansible.builtin.command: fastfetch --version
+  register: fastfetch_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download fastfetch .deb
+  ansible.builtin.get_url:
+    url: "https://github.com/fastfetch-cli/fastfetch/releases/download/{{ fastfetch_version }}/fastfetch-linux-{{ 'aarch64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb"
+    dest: "/tmp/fastfetch-{{ fastfetch_version }}.deb"
+    mode: "0644"
+  when: fastfetch_version not in (fastfetch_installed.stdout | default(''))
+
+- name: Install fastfetch .deb
+  become: true
+  ansible.builtin.apt:
+    deb: "/tmp/fastfetch-{{ fastfetch_version }}.deb"
+  when: fastfetch_version not in (fastfetch_installed.stdout | default(''))

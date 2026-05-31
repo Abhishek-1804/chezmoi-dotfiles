@@ -13,5 +13,8 @@
 - name: Install Nerd Font
   ansible.builtin.import_tasks: nerd_font.yml
 
+- name: Install fastfetch
+  ansible.builtin.import_tasks: fastfetch.yml
+
 - name: Symlink bat/fd to apt names
   ansible.builtin.import_tasks: aliases.yml

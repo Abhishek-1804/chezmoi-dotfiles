@@ -27,7 +27,7 @@ apt_packages:
   - zoxide
   - hwloc
   - procps        # provides `watch`
-  - fastfetch
+  # fastfetch installed via external_installers (not in 24.04 apt repos)
 
   # Networking & Security
   - nginx

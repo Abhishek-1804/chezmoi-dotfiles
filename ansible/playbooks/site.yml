@@ -23,6 +23,8 @@
       tags: [bootstrap]
     - role: apt
       tags: [packages, apt]
+    - role: docker
+      tags: [docker]
     - role: lazyvim
       tags: [lazyvim, nvim]
     - role: chezmoi

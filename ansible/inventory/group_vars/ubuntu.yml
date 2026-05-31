@@ -14,7 +14,8 @@ apt_packages:
   - protobuf-compiler
 
   # System Utilities
-  - chezmoi
+  # NOTE: chezmoi installed via official script in bootstrap role
+  # (apt version is too stale for template features).
   - neovim
   - bat
   - fd-find

@@ -11,6 +11,14 @@
     state: present
     update_cache: true
 
+- name: Install chezmoi via official installer
+  become: true
+  ansible.builtin.shell: |
+    set -e
+    sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+  args:
+    creates: /usr/local/bin/chezmoi
+
 - name: Check for Oh-My-Zsh
   ansible.builtin.stat:
     path: "{{ ansible_facts['user_dir'] }}/.oh-my-zsh"
@@ -26,5 +34,5 @@
 - name: Set zsh as default shell
   become: true
   ansible.builtin.user:
-    name: "{{ ansible_user_id }}"
+    name: "{{ ansible_facts['user_id'] }}"
     shell: /usr/bin/zsh

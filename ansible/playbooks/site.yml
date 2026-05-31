@@ -6,8 +6,8 @@
       tags: [bootstrap]
     - role: homebrew
       tags: [packages, brew]
-    - role: neovim
-      tags: [neovim, nvim]
+    - role: lazyvim
+      tags: [lazyvim, nvim]
     - role: chezmoi
       tags: [dotfiles, chezmoi]
     - role: macos_defaults
@@ -23,7 +23,7 @@
       tags: [bootstrap]
     - role: apt
       tags: [packages, apt]
-    - role: neovim
-      tags: [neovim, nvim]
+    - role: lazyvim
+      tags: [lazyvim, nvim]
     - role: chezmoi
       tags: [dotfiles, chezmoi]

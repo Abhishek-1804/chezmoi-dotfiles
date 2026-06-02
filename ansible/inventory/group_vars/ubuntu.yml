@@ -30,7 +30,6 @@ apt_packages_cli:
   - fzf
   - duf
   - btop
-  - starship
   - zoxide
   - hwloc
   - procps        # provides `watch`

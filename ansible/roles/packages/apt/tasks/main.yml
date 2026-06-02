@@ -1,0 +1,20 @@
+- name: Update apt cache and upgrade packages
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: dist
+
+- name: Install CLI apt packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ apt_packages_cli }}"
+    state: present
+
+- name: Install GUI apt packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ apt_packages_gui }}"
+    state: present
+  when:
+    - "'desktop' in inventory_hostname"
+    - apt_packages_gui | length > 0

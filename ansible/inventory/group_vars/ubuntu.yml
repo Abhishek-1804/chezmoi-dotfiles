@@ -1,6 +1,11 @@
 # apt-installable equivalents of the mac brew list.
 # Binary names sometimes differ (bat -> batcat, fd -> fdfind).
-apt_packages:
+#
+# Packages split into CLI (server-safe) and GUI lists.
+# GUI install is gated in roles/packages/apt by `'desktop' in inventory_hostname`,
+# so naming convention matters: desktop hosts must have "desktop" in their name.
+
+apt_packages_cli:
   # Development
   - git
   - gh
@@ -10,20 +15,22 @@ apt_packages:
   - gcc
   - cmake
   - make
+  - just
   - gradle
   - protobuf-compiler
 
   # System Utilities
   # NOTE: chezmoi installed via official script in bootstrap role
-  # (apt version is too stale for template features).
   # neovim installed via external_installers (apt version too old for LazyVim).
   - bat
   - fd-find
   - jq
+  - yq
   - ripgrep
   - fzf
   - duf
   - btop
+  - starship
   - zoxide
   - hwloc
   - procps        # provides `watch`
@@ -42,9 +49,23 @@ apt_packages:
   # Utilities
   - ffmpeg
   - hugo
+  - yt-dlp
   - fdupes
+
+  # Power management — start/stop battery charging above or below
+  # a given percentage (laptop battery longevity).
+  - tlp
+  - tlp-rdw
 
   # Fun
   - sl
   - cmatrix
-  - lolcat
+  - cbonsai
+
+  # Misc
+  - luarocks
+
+# GUI / desktop-only packages. Skipped when "desktop" not in inventory_hostname.
+# Mac equivalents live in cask_packages (mac.yml).
+apt_packages_gui:
+  - vlc

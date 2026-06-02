@@ -15,8 +15,8 @@
     - role: brew_maintenance
       tags: [never, maintenance]
 
-- name: Provision ubuntu
-  hosts: ubuntu
+- name: Provision ubuntu-desktop
+  hosts: ubuntu-desktop
   gather_facts: true
   roles:
     - role: bootstrap

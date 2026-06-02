@@ -1,7 +1,0 @@
-- name: Install starship binary
-  become: true
-  ansible.builtin.shell: |
-    set -e
-    curl -sS https://starship.rs/install.sh | sh -s -- -y -b /usr/local/bin
-  args:
-    creates: /usr/local/bin/starship

@@ -1,9 +1,6 @@
 - name: Install neovim
   ansible.builtin.import_tasks: neovim.yml
 
-- name: Install starship
-  ansible.builtin.import_tasks: starship.yml
-
 - name: Install atuin
   ansible.builtin.import_tasks: atuin.yml
 

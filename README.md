@@ -83,6 +83,7 @@ ubuntu:
 
 - Enable SSH: `sudo apt install -y openssh-server && sudo systemctl enable --now ssh`.
 - Install Tailscale if needed: `curl -fsSL https://tailscale.com/install.sh | sh && sudo tailscale up`.
+- On `ubuntu-desktop` used as a server (laptop lid closed, on AC): enable TLP for battery longevity — `sudo systemctl enable --now tlp tlp-sleep` (tlp + tlp-rdw installed via `apt_packages_cli`).
 
 ### General
 

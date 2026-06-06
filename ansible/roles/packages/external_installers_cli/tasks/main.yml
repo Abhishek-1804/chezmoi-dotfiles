@@ -13,9 +13,6 @@
 - name: Install lazydocker
   ansible.builtin.import_tasks: lazydocker.yml
 
-- name: Install Nerd Font
-  ansible.builtin.import_tasks: nerd_font.yml
-
 - name: Install fastfetch
   ansible.builtin.import_tasks: fastfetch.yml
 

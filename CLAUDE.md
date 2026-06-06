@@ -35,18 +35,23 @@ Ubuntu CLI vs GUI split is two separate roles: `apt_cli` (all ubuntu hosts) and 
 
 ### Role layout
 
-Package-related roles live under `roles/packages/` (apt_cli, apt_gui, homebrew, external_installers, brew_maintenance). `ansible.cfg` adds `roles/packages` to `roles_path`, so site.yml references them by short name (`role: apt_cli`). Non-package roles (bootstrap, chezmoi, docker, lazyvim, macos_defaults) stay at the top level of `roles/`. Note this nesting is **not standard** Ansible convention (convention is flat `roles/`); it's a deliberate organization choice for this repo.
+Package-related roles live under `roles/packages/` (apt_cli, apt_gui, homebrew, external_installers_cli, external_installers_gui, brew_maintenance). `ansible.cfg` adds `roles/packages` to `roles_path`, so site.yml references them by short name (`role: apt_cli`). Non-package roles (bootstrap, chezmoi, docker, lazyvim, macos_defaults) stay at the top level of `roles/`. Note this nesting is **not standard** Ansible convention (convention is flat `roles/`); it's a deliberate organization choice for this repo.
 
-### Why `external_installers` exists (ubuntu only)
+### Why `external_installers_cli` / `external_installers_gui` exist (ubuntu only)
 
-`roles/external_installers/` installs neovim, starship, atuin, lazygit, fastfetch, and the Nerd Font from upstream (not apt) because:
+These roles install tools from upstream (not apt) where apt is missing, stale, or unsuitable. Split mirrors the `apt_cli` / `apt_gui` pattern: `_cli` runs on every ubuntu host, `_gui` only on `ubuntu-desktop`.
+
+- `external_installers_cli` — neovim, starship, atuin, lazygit, lazydocker, fastfetch, kind, kubectl, helm, helmfile, k9s, uv, claude-code, plus bat/fd alias symlinks
+- `external_installers_gui` — Nerd Font (only useful on host with rendering terminal)
+
+Why upstream instead of apt:
 
 - apt neovim is too old for LazyVim
-- apt chezmoi lacks template features (so chezmoi is installed via the official script in `bootstrap`)
+- apt chezmoi lacks template features (chezmoi installed via official script in `bootstrap`)
 - fastfetch isn't in 24.04 apt
-- starship/atuin/lazygit/nerd-fonts aren't packaged
+- starship/atuin/lazygit/lazydocker/nerd-fonts/k8s tools aren't packaged
 
-When adding a tool to Ubuntu: prefer apt (`apt_packages_cli`/`apt_packages_gui`). Fall back to `external_installers/tasks/<tool>.yml` only if apt is missing or stale. Document the reason in the task file.
+When adding a tool to Ubuntu: prefer apt (`apt_packages_cli`/`apt_packages_gui`). Fall back to `external_installers_cli/tasks/<tool>.yml` (or `_gui` for desktop-only tools like terminals/fonts) only if apt is missing or stale. Document the reason in the task file.
 
 ### Tag conventions
 

@@ -23,7 +23,7 @@
       tags: [bootstrap]
     - role: apt_cli
       tags: [packages, apt]
-    - role: external_installers
+    - role: external_installers_cli
       tags: [packages, external]
     - role: docker
       tags: [docker]
@@ -38,3 +38,5 @@
   roles:
     - role: apt_gui
       tags: [packages, apt]
+    - role: external_installers_gui
+      tags: [packages, external]

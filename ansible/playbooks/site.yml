@@ -15,13 +15,13 @@
     - role: brew_maintenance
       tags: [never, maintenance]
 
-- name: Provision ubuntu-desktop
-  hosts: ubuntu-desktop
+- name: Provision ubuntu
+  hosts: ubuntu
   gather_facts: true
   roles:
     - role: bootstrap
       tags: [bootstrap]
-    - role: apt
+    - role: apt_cli
       tags: [packages, apt]
     - role: external_installers
       tags: [packages, external]
@@ -31,3 +31,10 @@
       tags: [lazyvim, nvim]
     - role: chezmoi
       tags: [dotfiles, chezmoi]
+
+- name: Provision ubuntu desktop extras
+  hosts: ubuntu-desktop
+  gather_facts: false
+  roles:
+    - role: apt_gui
+      tags: [packages, apt]

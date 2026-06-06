@@ -1,0 +1,5 @@
+- name: Install GUI apt packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ apt_packages_gui }}"
+    state: present

@@ -31,11 +31,11 @@ Each group has its own role pipeline. Roles common to both (`bootstrap`, `lazyvi
 | mac | `ansible/inventory/group_vars/mac.yml` | `brew_taps`, `brew_packages`, `cask_packages`, `brew_services`, `mas_packages` |
 | ubuntu | `ansible/inventory/group_vars/ubuntu.yml` | `apt_packages_cli` (server-safe), `apt_packages_gui` (desktop-only) |
 
-Ubuntu CLI vs GUI split is two variables (`apt_packages_cli`, `apt_packages_gui`) consumed by a single `roles/packages/apt/` role. GUI install is gated by `'desktop' in inventory_hostname` — so desktop hosts **must** have "desktop" in their inventory name (e.g. `ubuntu-desktop`) or GUI packages silently won't install. Server hosts named without "desktop" get only the CLI list.
+Ubuntu CLI vs GUI split is two separate roles: `apt_cli` (all ubuntu hosts) and `apt_gui` (desktop only). `site.yml` assigns `apt_cli` to the `ubuntu` group and `apt_gui` to `ubuntu-desktop` explicitly — no hostname-based conditionals.
 
 ### Role layout
 
-Package-related roles live under `roles/packages/` (apt, homebrew, external_installers, brew_maintenance). `ansible.cfg` adds `roles/packages` to `roles_path`, so site.yml still references them by short name (`role: apt`). Non-package roles (bootstrap, chezmoi, docker, lazyvim, macos_defaults) stay at the top level of `roles/`. Note this nesting is **not standard** Ansible convention (convention is flat `roles/`); it's a deliberate organization choice for this repo.
+Package-related roles live under `roles/packages/` (apt_cli, apt_gui, homebrew, external_installers, brew_maintenance). `ansible.cfg` adds `roles/packages` to `roles_path`, so site.yml references them by short name (`role: apt_cli`). Non-package roles (bootstrap, chezmoi, docker, lazyvim, macos_defaults) stay at the top level of `roles/`. Note this nesting is **not standard** Ansible convention (convention is flat `roles/`); it's a deliberate organization choice for this repo.
 
 ### Why `external_installers` exists (ubuntu only)
 

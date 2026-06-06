@@ -1,0 +1,23 @@
+- name: Check installed helmfile version
+  ansible.builtin.command: helmfile version
+  register: helmfile_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download helmfile tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/helmfile/helmfile/releases/download/v{{ helmfile_version }}/helmfile_{{ helmfile_version }}_linux_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.tar.gz"
+    dest: "/tmp/helmfile-{{ helmfile_version }}.tar.gz"
+    mode: "0644"
+  when: helmfile_version not in (helmfile_installed.stdout | default(''))
+
+- name: Extract helmfile binary
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/helmfile-{{ helmfile_version }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    include:
+      - helmfile
+    mode: "0755"
+  when: helmfile_version not in (helmfile_installed.stdout | default(''))

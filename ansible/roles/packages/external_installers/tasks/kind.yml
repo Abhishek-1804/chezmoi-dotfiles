@@ -1,0 +1,13 @@
+- name: Check installed kind version
+  ansible.builtin.command: kind version
+  register: kind_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download kind binary
+  become: true
+  ansible.builtin.get_url:
+    url: "https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
+    dest: /usr/local/bin/kind
+    mode: "0755"
+  when: kind_version not in (kind_installed.stdout | default(''))

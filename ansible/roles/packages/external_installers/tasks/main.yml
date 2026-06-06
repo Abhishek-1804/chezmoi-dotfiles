@@ -16,5 +16,26 @@
 - name: Install fastfetch
   ansible.builtin.import_tasks: fastfetch.yml
 
+- name: Install kind
+  ansible.builtin.import_tasks: kind.yml
+
+- name: Install kubectl
+  ansible.builtin.import_tasks: kubectl.yml
+
+- name: Install helm
+  ansible.builtin.import_tasks: helm.yml
+
+- name: Install helmfile
+  ansible.builtin.import_tasks: helmfile.yml
+
+- name: Install k9s
+  ansible.builtin.import_tasks: k9s.yml
+
+- name: Install uv
+  ansible.builtin.import_tasks: uv.yml
+
+- name: Install claude-code
+  ansible.builtin.import_tasks: claude_code.yml
+
 - name: Symlink bat/fd to apt names
   ansible.builtin.import_tasks: aliases.yml

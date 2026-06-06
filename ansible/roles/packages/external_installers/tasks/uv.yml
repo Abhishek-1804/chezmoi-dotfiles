@@ -1,0 +1,25 @@
+- name: Check installed uv version
+  ansible.builtin.command: uv --version
+  register: uv_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download uv tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/astral-sh/uv/releases/download/{{ uv_version }}/uv-{{ 'aarch64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}-unknown-linux-gnu.tar.gz"
+    dest: "/tmp/uv-{{ uv_version }}.tar.gz"
+    mode: "0644"
+  when: uv_version not in (uv_installed.stdout | default(''))
+
+- name: Extract uv binaries
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/uv-{{ uv_version }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    include:
+      - "uv-{{ 'aarch64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}-unknown-linux-gnu/uv"
+      - "uv-{{ 'aarch64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}-unknown-linux-gnu/uvx"
+    extra_opts: ["--strip-components=1"]
+    mode: "0755"
+  when: uv_version not in (uv_installed.stdout | default(''))

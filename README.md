@@ -71,65 +71,46 @@ ubuntu:
       ansible_user: ubuntu
 ```
 
+## Follow these steps manually
+
+> "Not every step deserves automation. One-time setup is productive procrastination dressed up as engineering — sometimes `curl`-ing a binary beats an hour spent making it declarative."
+
+### macOS
+
+- Add apps to **Login Items** (System Settings → General → Login Items).
+
+### Ubuntu
+
+- Enable SSH: `sudo apt install -y openssh-server && sudo systemctl enable --now ssh`.
+- Install Tailscale if needed: `curl -fsSL https://tailscale.com/install.sh | sh && sudo tailscale up`.
+
+### General
+
+- Authenticate to GitHub via SSH:
+
+  ```sh
+  ssh-keygen -t ed25519 -C "your_email@example.com"
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/id_ed25519
+  cat ~/.ssh/id_ed25519.pub        # paste into github.com/settings/keys
+  ssh -T git@github.com            # verify
+  ```
+
 ## Ansible cheat sheet
 
-Run from `ansible/`. The inventory path is set in `ansible.cfg`.
-
-### Inventory checks
+Run from `ansible/`. Inventory path set in `ansible.cfg`.
 
 ```sh
-ansible-inventory --list                    # full inventory dump
-ansible-inventory --graph                   # tree view of groups/hosts
-ansible all -m ping                         # ssh connectivity check
-ansible ubuntu -m setup                     # gather + print all facts
-ansible ubuntu -m setup -a 'filter=ansible_distribution*'
+ansible-playbook playbooks/site.yml                       # everything
+ansible-playbook playbooks/site.yml --limit mac           # one group
+ansible-playbook playbooks/site.yml --tags packages       # one tag
+ansible-playbook playbooks/site.yml --check --diff        # dry run
+ansible-playbook playbooks/site.yml --ask-become-pass     # prompt for sudo
 ```
 
-### Ad-hoc commands
+Tags wired in `playbooks/site.yml`: `bootstrap | packages | external | docker | lazyvim | dotfiles | defaults | maintenance`.
 
-```sh
-ansible all -m ping                         # built-in ping
-ansible ubuntu -a 'uptime'                  # run shell on all ubuntu hosts
-ansible ubuntu -b -a 'apt list --upgradable'   # -b = become root
-ansible ubuntu -m apt -a 'name=htop state=present' -b
-```
-
-### Playbook runs
-
-```sh
-ansible-playbook playbooks/site.yml                            # everything
-ansible-playbook playbooks/site.yml --limit mac                # one group
-ansible-playbook playbooks/site.yml --limit ubuntu-laptop      # one host
-ansible-playbook playbooks/site.yml --tags packages            # one role/tag
-ansible-playbook playbooks/site.yml --skip-tags lazyvim
-ansible-playbook playbooks/site.yml --check --diff             # dry run + show file diffs
-ansible-playbook playbooks/site.yml --start-at-task "Install CLI apt packages"
-ansible-playbook playbooks/site.yml -vvv                       # verbose (debug ssh issues)
-ansible-playbook playbooks/site.yml --ask-become-pass          # prompt for sudo (-K)
-ansible-playbook playbooks/site.yml --list-tasks               # show tasks without running
-ansible-playbook playbooks/site.yml --list-tags
-```
-
-### Useful tag combos in this repo
-
-```sh
-# tags wired up in playbooks/site.yml:
-#   bootstrap | packages (brew/apt) | external | docker | lazyvim | dotfiles | defaults | maintenance
-
-ansible-playbook playbooks/site.yml --tags dotfiles          # re-apply chezmoi only
-ansible-playbook playbooks/site.yml --tags packages          # refresh packages only
-ansible-playbook playbooks/site.yml --tags docker --limit ubuntu
-ansible-playbook playbooks/site.yml --tags maintenance --limit mac   # brew cleanup (gated by `never`)
-```
-
-### Vault (if/when you add secrets)
-
-```sh
-ansible-vault create  group_vars/all/vault.yml
-ansible-vault edit    group_vars/all/vault.yml
-ansible-vault view    group_vars/all/vault.yml
-ansible-playbook playbooks/site.yml --ask-vault-pass
-```
+Full reference: [docs.ansible.com](https://docs.ansible.com/ansible/latest/).
 
 ## chezmoi cheat sheet
 

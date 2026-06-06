@@ -1,4 +1,5 @@
 lazygit_version: "0.44.1"
+lazydocker_version: "0.23.3"
 neovim_version: "0.11.3"
 nerd_font_name: "JetBrainsMono"
 nerd_font_version: "v3.2.1"

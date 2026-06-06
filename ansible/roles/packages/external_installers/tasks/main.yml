@@ -10,6 +10,9 @@
 - name: Install lazygit
   ansible.builtin.import_tasks: lazygit.yml
 
+- name: Install lazydocker
+  ansible.builtin.import_tasks: lazydocker.yml
+
 - name: Install Nerd Font
   ansible.builtin.import_tasks: nerd_font.yml
 

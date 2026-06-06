@@ -1,0 +1,23 @@
+- name: Check installed lazydocker version
+  ansible.builtin.command: lazydocker --version
+  register: lazydocker_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download lazydocker release tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/jesseduffield/lazydocker/releases/download/v{{ lazydocker_version }}/lazydocker_{{ lazydocker_version }}_Linux_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}.tar.gz"
+    dest: "/tmp/lazydocker_{{ lazydocker_version }}.tar.gz"
+    mode: "0644"
+  when: lazydocker_version not in (lazydocker_installed.stdout | default(''))
+
+- name: Extract lazydocker binary
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/lazydocker_{{ lazydocker_version }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    include:
+      - lazydocker
+    mode: "0755"
+  when: lazydocker_version not in (lazydocker_installed.stdout | default(''))

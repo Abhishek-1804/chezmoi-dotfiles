@@ -124,6 +124,7 @@ cask_packages:
   - vlc
   - steam
   - boosteroid
+  - nvidia-geforce-now
   - google-drive
   - container
   - dockey

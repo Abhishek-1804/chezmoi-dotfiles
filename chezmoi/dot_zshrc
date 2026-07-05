@@ -107,8 +107,6 @@ source $ZSH/oh-my-zsh.sh
 ##################################################################################
 # Personal configs
 
-export PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@24/bin:$PATH
-
 alias lg="lazygit"
 alias k="kubectl"
 

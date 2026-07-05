@@ -13,7 +13,7 @@
 - name: Init chezmoi source from repo
   ansible.builtin.command: chezmoi init https://github.com/Abhishek-1804/chezmoi-dotfiles.git
   args:
-    creates: "{{ ansible_facts['user_dir'] }}/.local/share/chezmoi/.git"
+    creates: "{{ ansible_facts['user_dir'] }}/dotfiles/.git"
 
 - name: Apply dotfiles
   ansible.builtin.command: chezmoi apply

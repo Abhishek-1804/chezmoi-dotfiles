@@ -43,7 +43,7 @@ xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install chezmoi ansible
 chezmoi init --apply <github-user>
-cd ~/.local/share/chezmoi/ansible
+cd ~/dotfiles/ansible
 ansible-galaxy collection install -r requirements.yml
 ansible-playbook playbooks/site.yml --limit mac --ask-become-pass
 ```
@@ -53,7 +53,7 @@ ansible-playbook playbooks/site.yml --limit mac --ask-become-pass
 ```sh
 sudo apt update && sudo apt install -y ansible git
 # add target host to ansible/inventory/hosts.yml, then from the control node:
-cd ~/.local/share/chezmoi/ansible
+cd ~/dotfiles/ansible
 ansible-galaxy collection install -r requirements.yml
 ansible-playbook playbooks/site.yml --limit ubuntu --ask-become-pass
 ```

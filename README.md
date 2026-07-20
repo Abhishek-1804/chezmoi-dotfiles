@@ -1,6 +1,14 @@
 # dotfiles
 
-Personal machine setup. Two layers:
+Personal machine setup. This repo manages **only three things**:
+
+1. **Packages** — everything installed via brew/apt/external installers
+2. **System config** — OS-level settings (`defaults write`, etc.)
+3. **Dotfiles** — `~/.zshrc`, `~/.gitconfig`, `~/.config/*`
+
+Anything outside those three is intentionally out of scope.
+
+Two layers:
 
 - **chezmoi** — dotfiles (`~/.zshrc`, `~/.gitconfig`, `~/.config/*`)
 - **ansible** — packages, system config, dev tools (idempotent provisioning)

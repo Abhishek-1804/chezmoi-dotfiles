@@ -44,7 +44,6 @@ brew_packages:
   # AI
   - opencode
   - ollama
-  - human37/open-wispr/open-wispr
 
   # Cloud & DevOps
   - awscli
@@ -133,8 +132,7 @@ cask_packages:
   - tailscale-app
   - font-jetbrains-mono-nerd-font
 
-brew_services:
-  - human37/open-wispr/open-wispr
+brew_services: []
 
 mas_packages:
   - name: Amphetamine

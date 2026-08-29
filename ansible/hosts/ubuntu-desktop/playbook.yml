@@ -1,0 +1,18 @@
+- name: Provision ubuntu-desktop
+  hosts: ubuntu-desktop
+  gather_facts: true
+  vars_files:
+    - vars.yml
+  roles:
+    - role: bootstrap
+      tags: [bootstrap]
+    - role: apt
+      tags: [packages, apt]
+    - role: external_installers
+      tags: [packages, external]
+    - role: docker
+      tags: [docker]
+    - role: lazyvim
+      tags: [lazyvim, nvim]
+    - role: chezmoi
+      tags: [dotfiles, chezmoi]

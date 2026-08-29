@@ -1,0 +1,9 @@
+sourceDir = "{{ ansible_facts['user_dir'] }}/dotfiles"
+
+[data]
+    email = "{{ user_email }}"
+    name = "{{ user_name }}"
+
+[git]
+    autoCommit = true
+    autoPush = true

@@ -1,0 +1,18 @@
+- name: Provision mac
+  hosts: mac
+  gather_facts: true
+  vars_files:
+    - vars.yml
+  roles:
+    - role: bootstrap
+      tags: [bootstrap]
+    - role: homebrew
+      tags: [packages, brew]
+    - role: lazyvim
+      tags: [lazyvim, nvim]
+    - role: chezmoi
+      tags: [dotfiles, chezmoi]
+    - role: macos_defaults
+      tags: [defaults]
+    - role: brew_maintenance
+      tags: [never, maintenance]

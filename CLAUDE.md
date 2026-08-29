@@ -17,32 +17,65 @@ The two are linked: the `chezmoi` Ansible role runs `chezmoi apply` at the end o
 
 ## Ansible architecture
 
-Single playbook (`ansible/playbooks/site.yml`) drives two host groups defined in `ansible/inventory/hosts.yml`:
+**Split per host, not per OS.** Every machine gets a self-contained tree under
+`ansible/hosts/<name>/`:
 
-- **`mac`** — `localhost`, `ansible_connection: local`
-- **`ubuntu`** — remote SSH hosts (currently `ubuntu-laptop` at `10.0.0.133`)
+```
+ansible/
+  ansible.cfg
+  inventory/hosts.yml        # one entry per machine, all ansible_connection: local
+  hosts/
+    mac/            playbook.yml  vars.yml  roles/
+    ubuntu-desktop/ playbook.yml  vars.yml  roles/
+    ubuntu-server/  playbook.yml  vars.yml  roles/
+```
 
-Each group has its own role pipeline. Roles common to both (`bootstrap`, `lazyvim`, `chezmoi`) are OS-gated internally.
+There is **no shared `roles/` directory and no `site.yml`**. Ansible resolves roles
+from the `roles/` dir adjacent to the playbook, so each tree loads only its own
+copies. `ansible.cfg` has no `roles_path` — adding one would reintroduce sharing.
+
+### The duplication is deliberate
+
+`lazyvim`, `chezmoi`, `docker`, `bootstrap`, and `external_installers` exist as
+independent copies in multiple trees. This was chosen over shared roles so that
+each host can be edited without regression risk elsewhere. Consequences:
+
+- **Never** refactor duplicated roles back into a shared location.
+- **Never** add `when: ansible_facts['os_family'] == ...` or hostname conditionals.
+  A tree already knows what OS it is: `hosts/mac/roles/bootstrap` is macOS-only,
+  `hosts/ubuntu-*/roles/bootstrap` is Debian-only, both with the gate stripped.
+- A fix worth having everywhere must be applied in each tree by hand. When asked to
+  change shared behaviour, ask which hosts it applies to, or apply to all and say so.
+
+### Per-host role sets
+
+| Host | Roles |
+|---|---|
+| `mac` | bootstrap, homebrew, lazyvim, chezmoi, macos_defaults, brew_maintenance |
+| `ubuntu-desktop` | bootstrap, apt, external_installers (incl. nerd font), docker, lazyvim, chezmoi |
+| `ubuntu-server` | bootstrap, apt, external_installers, docker, lazyvim, chezmoi |
+
+The old `apt_cli`/`apt_gui` and `external_installers_cli`/`_gui` splits are gone —
+the CLI/GUI distinction is now just which host tree a package is listed in.
 
 ### Package sources (where to add things)
 
-| Platform | File | Lists |
+| Host | File | Lists |
 |---|---|---|
-| mac | `ansible/inventory/group_vars/mac.yml` | `brew_taps`, `brew_packages`, `cask_packages`, `brew_services`, `mas_packages` |
-| ubuntu | `ansible/inventory/group_vars/ubuntu.yml` | `apt_packages_cli` (server-safe), `apt_packages_gui` (desktop-only) |
+| mac | `ansible/hosts/mac/vars.yml` | `brew_taps`, `brew_packages`, `cask_packages`, `brew_services`, `mas_packages` |
+| ubuntu-desktop | `ansible/hosts/ubuntu-desktop/vars.yml` | `apt_packages` (includes GUI packages) |
+| ubuntu-server | `ansible/hosts/ubuntu-server/vars.yml` | `apt_packages` (CLI only) |
 
-Ubuntu CLI vs GUI split is two separate roles: `apt_cli` (all ubuntu hosts) and `apt_gui` (desktop only). `site.yml` assigns `apt_cli` to the `ubuntu` group and `apt_gui` to `ubuntu-desktop` explicitly — no hostname-based conditionals.
+Vars are loaded via `vars_files: [vars.yml]` in each playbook, resolved relative to
+the playbook. `inventory/group_vars/` no longer exists; `user_name`/`user_email` are
+repeated in each host's `vars.yml`.
 
-### Role layout
+### Why `external_installers` exists (ubuntu only)
 
-Package-related roles live under `roles/packages/` (apt_cli, apt_gui, homebrew, external_installers_cli, external_installers_gui, brew_maintenance). `ansible.cfg` adds `roles/packages` to `roles_path`, so site.yml references them by short name (`role: apt_cli`). Non-package roles (bootstrap, chezmoi, docker, lazyvim, macos_defaults) stay at the top level of `roles/`. Note this nesting is **not standard** Ansible convention (convention is flat `roles/`); it's a deliberate organization choice for this repo.
-
-### Why `external_installers_cli` / `external_installers_gui` exist (ubuntu only)
-
-These roles install tools from upstream (not apt) where apt is missing, stale, or unsuitable. Split mirrors the `apt_cli` / `apt_gui` pattern: `_cli` runs on every ubuntu host, `_gui` only on `ubuntu-desktop`.
-
-- `external_installers_cli` — neovim, starship, atuin, lazygit, lazydocker, fastfetch, kind, kubectl, helm, helmfile, k9s, uv, claude-code, plus bat/fd alias symlinks
-- `external_installers_gui` — Nerd Font (only useful on host with rendering terminal)
+Installs tools from upstream where apt is missing, stale, or unsuitable: neovim,
+starship, atuin, lazygit, lazydocker, fastfetch, kind, kubectl, helm, helmfile, k9s,
+uv, claude-code, plus bat/fd alias symlinks. `ubuntu-desktop` additionally installs
+the Nerd Font (only useful where a terminal renders it).
 
 Why upstream instead of apt:
 
@@ -51,43 +84,52 @@ Why upstream instead of apt:
 - fastfetch isn't in 24.04 apt
 - starship/atuin/lazygit/lazydocker/nerd-fonts/k8s tools aren't packaged
 
-When adding a tool to Ubuntu: prefer apt (`apt_packages_cli`/`apt_packages_gui`). Fall back to `external_installers_cli/tasks/<tool>.yml` (or `_gui` for desktop-only tools like terminals/fonts) only if apt is missing or stale. Document the reason in the task file.
+When adding a tool to an Ubuntu host: prefer apt (`apt_packages` in that host's
+`vars.yml`). Fall back to `hosts/<name>/roles/external_installers/tasks/<tool>.yml`
+only if apt is missing or stale, and document the reason in the task file. Pinned
+versions live in that role's `defaults/main.yml`.
+
+### Adding a new machine
+
+Copy the closest existing tree (`cp -R hosts/ubuntu-server hosts/ubuntu-nas`), change
+`hosts:` in its `playbook.yml`, trim its `vars.yml`, and add the host to
+`inventory/hosts.yml`. Nothing else references it.
 
 ### Tag conventions
 
-Every role in `site.yml` has tags. Two non-obvious ones:
+Every role in every `playbook.yml` has tags: `bootstrap | packages | apt | brew |
+external | docker | lazyvim | nvim | dotfiles | chezmoi | defaults | maintenance`.
+Two non-obvious ones:
 
 - `--tags packages` — refreshes brew on mac, apt + external_installers on ubuntu
-- `brew_maintenance` role is tagged `never` — runs only with `--tags maintenance`
-
-### Bootstrap gating
-
-`roles/bootstrap/tasks/main.yml` dispatches by `ansible_facts['os_family']` to `darwin.yml` or `linux.yml`. Same pattern is the right one if any other role needs OS-specific paths.
+- `brew_maintenance` (mac only) is tagged `never` — runs only with `--tags maintenance`
 
 ## Common commands
 
-Run from `ansible/` (the inventory path is set in `ansible.cfg`).
+Run from `ansible/` (the inventory path is set in `ansible.cfg`). Each host tree is
+its own entry point — there is no playbook that runs them all.
 
 ```sh
 # first-time deps
 ansible-galaxy collection install -r requirements.yml
 
-# full run
-ansible-playbook playbooks/site.yml --ask-become-pass
+# provision the machine you are on
+ansible-playbook hosts/mac/playbook.yml --ask-become-pass
+ansible-playbook hosts/ubuntu-desktop/playbook.yml --ask-become-pass
+ansible-playbook hosts/ubuntu-server/playbook.yml --ask-become-pass
 
 # scoped runs
-ansible-playbook playbooks/site.yml --limit mac
-ansible-playbook playbooks/site.yml --limit ubuntu
-ansible-playbook playbooks/site.yml --tags dotfiles        # re-apply chezmoi only
-ansible-playbook playbooks/site.yml --tags packages        # refresh packages only
+ansible-playbook hosts/mac/playbook.yml --tags dotfiles      # re-apply chezmoi only
+ansible-playbook hosts/mac/playbook.yml --tags packages      # refresh packages only
+ansible-playbook hosts/mac/playbook.yml --tags maintenance   # brew cleanup (tag: never)
 
 # dry run with diffs
-ansible-playbook playbooks/site.yml --check --diff
+ansible-playbook hosts/mac/playbook.yml --check --diff
 
-# debug ssh / connectivity
-ansible all -m ping
+# inspect
+ansible-playbook hosts/mac/playbook.yml --syntax-check
+ansible-playbook hosts/mac/playbook.yml --list-tasks
 ansible-inventory --graph
-ansible-playbook playbooks/site.yml -vvv
 
 # chezmoi (outside ansible)
 chezmoi diff
@@ -97,7 +139,13 @@ chezmoi edit ~/.zshrc      # edit source via $HOME path
 
 ## Gotchas
 
-- **apt binary name drift**: on Ubuntu `bat` is `batcat`, `fd` is `fdfind`. `roles/external_installers/tasks/aliases.yml` symlinks them back to the expected names — do not "fix" callers to use the apt names.
-- **chezmoi from apt is broken** for this repo's templates. The `bootstrap` role installs chezmoi via the official script; do not add it to `apt_packages_cli`.
-- **`ansible_user` on Ubuntu** is `akdpubuntu` (not `ubuntu` or the current shell user). New Ubuntu hosts need their own user set in `inventory/hosts.yml`.
-- The `host_key_checking = False` in `ansible.cfg` is intentional for fresh-provisioned hosts; do not remove without replacing with a known_hosts strategy.
+- **apt binary name drift**: on Ubuntu `bat` is `batcat`, `fd` is `fdfind`. Each ubuntu
+  tree's `roles/external_installers/tasks/aliases.yml` symlinks them back to the
+  expected names — do not "fix" callers to use the apt names.
+- **chezmoi from apt is broken** for this repo's templates. The `bootstrap` role installs
+  chezmoi via the official script; do not add it to `apt_packages`.
+- **All hosts are `ansible_connection: local`.** The playbooks provision the machine they
+  run on; there is no SSH/control-node path. Adding `ansible_host`/`ansible_user` to
+  reprovision a box remotely is a deliberate change, not a fill-in-the-blank.
+- The `host_key_checking = False` in `ansible.cfg` is intentional for fresh-provisioned
+  hosts; do not remove without replacing with a known_hosts strategy.

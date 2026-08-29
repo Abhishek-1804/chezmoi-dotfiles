@@ -1,0 +1,11 @@
+# npm is installed via apt_packages
+- name: Check installed claude-code version
+  ansible.builtin.command: claude --version
+  register: claude_code_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install claude-code via npm
+  become: true
+  ansible.builtin.command: npm install -g "@anthropic-ai/claude-code@{{ claude_code_version }}"
+  when: claude_code_version not in (claude_code_installed.stdout | default(''))

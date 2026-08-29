@@ -1,0 +1,23 @@
+- name: Check installed lazygit version
+  ansible.builtin.command: lazygit --version
+  register: lazygit_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download lazygit release tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_{{ lazygit_version }}_Linux_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}.tar.gz"
+    dest: "/tmp/lazygit_{{ lazygit_version }}.tar.gz"
+    mode: "0644"
+  when: lazygit_version not in (lazygit_installed.stdout | default(''))
+
+- name: Extract lazygit binary
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/lazygit_{{ lazygit_version }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    include:
+      - lazygit
+    mode: "0755"
+  when: lazygit_version not in (lazygit_installed.stdout | default(''))

@@ -1,0 +1,11 @@
+- name: Update apt cache and upgrade packages
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: dist
+
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ apt_packages }}"
+    state: present

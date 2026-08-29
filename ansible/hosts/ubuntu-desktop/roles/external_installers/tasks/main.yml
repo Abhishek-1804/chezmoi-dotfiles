@@ -1,0 +1,44 @@
+- name: Install neovim
+  ansible.builtin.import_tasks: neovim.yml
+
+- name: Install starship
+  ansible.builtin.import_tasks: starship.yml
+
+- name: Install atuin
+  ansible.builtin.import_tasks: atuin.yml
+
+- name: Install lazygit
+  ansible.builtin.import_tasks: lazygit.yml
+
+- name: Install lazydocker
+  ansible.builtin.import_tasks: lazydocker.yml
+
+- name: Install fastfetch
+  ansible.builtin.import_tasks: fastfetch.yml
+
+- name: Install kind
+  ansible.builtin.import_tasks: kind.yml
+
+- name: Install kubectl
+  ansible.builtin.import_tasks: kubectl.yml
+
+- name: Install helm
+  ansible.builtin.import_tasks: helm.yml
+
+- name: Install helmfile
+  ansible.builtin.import_tasks: helmfile.yml
+
+- name: Install k9s
+  ansible.builtin.import_tasks: k9s.yml
+
+- name: Install uv
+  ansible.builtin.import_tasks: uv.yml
+
+- name: Install claude-code
+  ansible.builtin.import_tasks: claude_code.yml
+
+- name: Symlink bat/fd to apt names
+  ansible.builtin.import_tasks: aliases.yml
+
+- name: Install Nerd Font
+  ansible.builtin.import_tasks: nerd_font.yml

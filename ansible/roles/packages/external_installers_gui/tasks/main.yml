@@ -1,2 +1,0 @@
-- name: Install Nerd Font
-  ansible.builtin.import_tasks: nerd_font.yml

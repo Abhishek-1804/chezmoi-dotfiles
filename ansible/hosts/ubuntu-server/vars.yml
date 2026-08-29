@@ -1,0 +1,66 @@
+user_name: abhishek deshpande
+user_email: abhidp55@gmail.com
+
+# apt-installable packages for this host.
+# Binary names sometimes differ from the mac equivalents (bat -> batcat, fd -> fdfind);
+# roles/external_installers/tasks/aliases.yml symlinks them back.
+
+apt_packages:
+  # Development
+  - git
+  - gh
+  - nodejs
+  - npm
+  - golang-go
+  - gcc
+  - cmake
+  - make
+  - just
+  - gradle
+  - protobuf-compiler
+
+  # System Utilities
+  # NOTE: chezmoi installed via official script in bootstrap role
+  # neovim installed via external_installers (apt version too old for LazyVim).
+  - bat
+  - fd-find
+  - jq
+  - yq
+  - ripgrep
+  - fzf
+  - duf
+  - btop
+  - zoxide
+  - hwloc
+  - procps        # provides `watch`
+  # fastfetch installed via external_installers (not in 24.04 apt repos)
+
+  # Networking & Security
+  - nginx
+  - mtr
+  - nmap
+  - aria2
+  - rsync
+  - rclone
+  - speedtest-cli
+  - hashcat
+
+  # Utilities
+  - ffmpeg
+  - hugo
+  - yt-dlp
+  - fdupes
+
+  # Power management — start/stop battery charging above or below
+  # a given percentage (laptop battery longevity).
+  - tlp
+  - tlp-rdw
+
+  # Fun
+  - sl
+  - cmatrix
+  - cbonsai
+
+  # Misc
+  - luarocks
+

@@ -1,0 +1,145 @@
+user_name: abhishek deshpande
+user_email: abhidp55@gmail.com
+
+brew_taps:
+  - nikitabobko/tap
+
+brew_packages:
+  # Development
+  - git
+  - gh
+  - uv
+  - rustup
+  - go
+  - gcc
+  - cmake
+  - make
+  - just
+  - pnpm
+  - nvm
+  - gradle
+  - protobuf
+
+  # System Utilities
+  - neovim
+  - atuin
+  - bat
+  - fd
+  - jq
+  - yq
+  - ripgrep
+  - fzf
+  - lazygit
+  - lazydocker
+  - starship
+  - zellij
+  - yazi
+  - duf
+  - btop
+  - fastfetch
+  - chezmoi
+  - zoxide
+  - tlrc
+  - watch
+  - hwloc
+  - scc
+
+  # AI
+  - opencode
+  - ollama
+
+  # Cloud & DevOps
+  - awscli
+  - kubectl
+  - kind
+  - helm
+  - helmfile
+  - vfkit
+  - k9s
+  - minikube
+  - podman
+  - podman-compose
+
+  # Networking & Security
+  - nginx
+  - mtr
+  - nmap
+  - aria2
+  - rsync
+  - rclone
+  - speedtest-cli
+  - httping
+  - gping
+  - hashcat
+
+  # Utilities
+  - ffmpeg
+  - hugo
+  - yt-dlp
+  - croc
+  - fdupes
+
+  # Fun
+  - sl
+  - cmatrix
+  - cbonsai
+  - asciiquarium
+  - genact
+  - asciinema
+  - lolcat
+
+  # Misc/Specific
+  - luarocks
+  - container-compose
+  - lazycontainer
+
+  # mac-apps
+  - mas
+
+cask_packages:
+  - arc
+  - google-chrome
+  - cmux
+  - blip
+  - ghostty
+  - orbstack
+  - utm
+  - raycast
+  - notion
+  - aerospace
+  - discord
+  - whatsapp
+  - zoom
+  - claude
+  - claude-code@latest
+  - obsidian
+  - microsoft-word
+  - microsoft-excel
+  - microsoft-teams
+  - zed
+  - microsoft-powerpoint
+  - scroll-reverser
+  - vlc
+  - steam
+  - boosteroid
+  - nvidia-geforce-now
+  - google-drive
+  - container
+  - dockey
+  - logi-options+
+  - surfshark
+  - tailscale-app
+  - font-jetbrains-mono-nerd-font
+
+brew_services: []
+
+mas_packages:
+  - name: Amphetamine
+    id: 937984704
+  - name: iMovie
+    id: 408981434
+  - name: Tap Bot
+    id: 6444782835
+  - name: DaVinci Resolve
+    id: 571213070
+

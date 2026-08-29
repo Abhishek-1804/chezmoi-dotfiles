@@ -22,25 +22,28 @@ chezmoi/        # dotfiles, templated per-host
 ansible/
   ansible.cfg
   requirements.yml
-  inventory/
-    hosts.yml
-    group_vars/
-      all.yml       # shared
-      mac.yml       # brew + cask + mas packages
-      ubuntu.yml    # apt CLI + GUI packages (GUI gated on `ubuntu_desktop`)
-  playbooks/site.yml
-  roles/
-    bootstrap/            # base tooling, OS-gated
-    chezmoi/              # apply dotfiles
-    docker/               # ubuntu: docker engine + compose
-    lazyvim/              # nvim config bootstrap
-    macos_defaults/       # mac: `defaults write` settings
-    packages/             # nested via roles_path (see ansible.cfg)
-      homebrew/           # mac: brew taps + formulae + casks + mas
-      apt/                # ubuntu: CLI + GUI apt packages (GUI gated on hostname)
-      external_installers/  # ubuntu: neovim, starship, atuin, lazygit, fastfetch, nerd font
-      brew_maintenance/   # mac: brew cleanup (tag: never)
+  inventory/hosts.yml       # one entry per machine, all ansible_connection: local
+  hosts/                    # one self-contained tree per host
+    mac/
+      playbook.yml
+      vars.yml              # brew + cask + mas packages
+      roles/                # bootstrap, homebrew, lazyvim, chezmoi,
+                            # macos_defaults, brew_maintenance
+    ubuntu-desktop/
+      playbook.yml
+      vars.yml              # apt packages (CLI + GUI)
+      roles/                # bootstrap, apt, external_installers,
+                            # docker, lazyvim, chezmoi
+    ubuntu-server/
+      playbook.yml
+      vars.yml              # apt packages (CLI only)
+      roles/                # same set as ubuntu-desktop, minus the nerd font
 ```
+
+Roles are **duplicated per host on purpose**. Each `hosts/<name>/` tree is standalone:
+no OS gating, no hostname conditionals, no shared roles. Editing one host cannot
+break another. The cost is that a fix worth having everywhere must be applied in
+each tree.
 
 ## First-time setup
 
@@ -53,30 +56,42 @@ brew install chezmoi ansible
 chezmoi init --apply <github-user>
 cd ~/dotfiles/ansible
 ansible-galaxy collection install -r requirements.yml
-ansible-playbook playbooks/site.yml --limit mac --ask-become-pass
+ansible-playbook hosts/mac/playbook.yml --ask-become-pass
 ```
 
 ### Ubuntu
 
+Run on the machine itself — pick the tree that matches what the box is.
+
 ```sh
 sudo apt update && sudo apt install -y ansible git
-# add target host to ansible/inventory/hosts.yml, then from the control node:
 cd ~/dotfiles/ansible
 ansible-galaxy collection install -r requirements.yml
-ansible-playbook playbooks/site.yml --limit ubuntu --ask-become-pass
+
+# desktop (GUI packages + nerd font)
+ansible-playbook hosts/ubuntu-desktop/playbook.yml --ask-become-pass
+
+# server (CLI only)
+ansible-playbook hosts/ubuntu-server/playbook.yml --ask-become-pass
 ```
 
-For Ubuntu, **GUI packages install only when "desktop" appears in the inventory hostname**. Name desktops `ubuntu-desktop`, `home-desktop`, etc. Servers — anything without "desktop" in the name — get only the CLI list:
+### Adding a new machine
+
+Copy the closest existing tree, then register the host:
+
+```sh
+cp -R hosts/ubuntu-server hosts/ubuntu-nas
+# edit hosts/ubuntu-nas/playbook.yml  -> hosts: ubuntu-nas
+# edit hosts/ubuntu-nas/vars.yml      -> its package list
+```
 
 ```yaml
-ubuntu:
+# inventory/hosts.yml
+all:
   hosts:
-    ubuntu-desktop:               # GUI + CLI
-      ansible_host: 10.0.0.133
-      ansible_user: akdpubuntu
-    my-server:                    # CLI only (no "desktop" in name)
-      ansible_host: 10.0.0.50
-      ansible_user: ubuntu
+    ubuntu-nas:
+      ansible_connection: local
+      ansible_python_interpreter: /usr/bin/python3
 ```
 
 ## Follow these steps manually
@@ -91,7 +106,7 @@ ubuntu:
 
 - Enable SSH: `sudo apt install -y openssh-server && sudo systemctl enable --now ssh`.
 - Install Tailscale if needed: `curl -fsSL https://tailscale.com/install.sh | sh && sudo tailscale up`.
-- On `ubuntu-desktop` used as a server (laptop lid closed, on AC): enable TLP for battery longevity — `sudo systemctl enable --now tlp tlp-sleep` (tlp + tlp-rdw installed via `apt_packages_cli`).
+- On `ubuntu-desktop` used as a server (laptop lid closed, on AC): enable TLP for battery longevity — `sudo systemctl enable --now tlp tlp-sleep` (tlp + tlp-rdw installed via `apt_packages`).
 
 ### General
 
@@ -107,17 +122,18 @@ ubuntu:
 
 ## Ansible cheat sheet
 
-Run from `ansible/`. Inventory path set in `ansible.cfg`.
+Run from `ansible/`. Inventory path set in `ansible.cfg`. There is no combined
+playbook — each host is its own entry point.
 
 ```sh
-ansible-playbook playbooks/site.yml                       # everything
-ansible-playbook playbooks/site.yml --limit mac           # one group
-ansible-playbook playbooks/site.yml --tags packages       # one tag
-ansible-playbook playbooks/site.yml --check --diff        # dry run
-ansible-playbook playbooks/site.yml --ask-become-pass     # prompt for sudo
+ansible-playbook hosts/mac/playbook.yml                    # provision this mac
+ansible-playbook hosts/mac/playbook.yml --tags packages    # one tag
+ansible-playbook hosts/mac/playbook.yml --check --diff     # dry run
+ansible-playbook hosts/mac/playbook.yml --ask-become-pass  # prompt for sudo
+ansible-playbook hosts/mac/playbook.yml --tags maintenance # brew cleanup (tag: never)
 ```
 
-Tags wired in `playbooks/site.yml`: `bootstrap | packages | external | docker | lazyvim | dotfiles | defaults | maintenance`.
+Tags wired in every `playbook.yml`: `bootstrap | packages | external | docker | lazyvim | dotfiles | defaults | maintenance`.
 
 Full reference: [docs.ansible.com](https://docs.ansible.com/ansible/latest/).
 
@@ -136,9 +152,17 @@ chezmoi update            # git pull + apply
 
 ## Adding packages
 
-- **mac**: edit `ansible/inventory/group_vars/mac.yml` — `brew_packages`, `cask_packages`, or `mas_packages`.
-- **ubuntu CLI** (server-safe): edit `apt_packages_cli` in `ubuntu.yml`.
-- **ubuntu GUI** (desktop-only): edit `apt_packages_gui` in `ubuntu.yml`. Skipped unless inventory hostname contains "desktop".
-- Things not in apt (neovim, starship, atuin, lazygit, fastfetch, nerd font) live in `roles/external_installers/`.
+Every host owns its own list in `hosts/<name>/vars.yml`:
 
-Re-run: `ansible-playbook playbooks/site.yml --tags packages`.
+- **mac** — `brew_packages`, `cask_packages`, `mas_packages` in `hosts/mac/vars.yml`.
+- **ubuntu-desktop** — `apt_packages` in `hosts/ubuntu-desktop/vars.yml` (GUI packages
+  just go in the same list; nothing is gated).
+- **ubuntu-server** — `apt_packages` in `hosts/ubuntu-server/vars.yml`.
+
+Want a package on both ubuntu hosts? Add it to both files.
+
+Things not in apt (neovim, starship, atuin, lazygit, fastfetch, k8s tools, nerd font)
+live in that host's `roles/external_installers/`, with pinned versions in its
+`defaults/main.yml`.
+
+Re-run: `ansible-playbook hosts/<name>/playbook.yml --tags packages`.
